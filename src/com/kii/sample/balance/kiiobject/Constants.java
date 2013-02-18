@@ -16,8 +16,8 @@
 package com.kii.sample.balance.kiiobject;
 
 public class Constants {
-    public static final String APP_ID = "282d825c";
-    public static final String APP_KEY = "9d7c4e50ad74323db2baf7290e042fc9";
+    public static final String APP_ID = "ee573743";
+    public static final String APP_KEY = "5eb7b8bc1b4e4c98e659431c69cef8d4";
     
     public static final String BUCKET_NAME = "balance_book";
 }
