@@ -24,3 +24,7 @@ This app uses the following features:
   + sort by Desc
 
 See http://documentation.kii.com/en/kii-balance-for-android for more details.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/KiiPlatform/kiibalance-android/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
