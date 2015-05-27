@@ -1,3 +1,7 @@
 # generate file
-bin/*
-gen/*
+.gradle/*
+.idea/*
+*.iml
+build/*
+local.properties
+
