@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 
 import com.kii.cloud.storage.Kii;
 import com.kii.cloud.storage.Kii.Site;
@@ -28,7 +29,7 @@ import com.kii.sample.balance.list.BalanceListFragment;
 import com.kii.sample.balance.title.TitleFragment;
 import com.kii.util.dialog.ProgressDialogFragment;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
     
     /*
      * (non-Javadoc)
