@@ -16,6 +16,7 @@
 package com.kii.sample.balance;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,31 +32,33 @@ import com.kii.util.dialog.ProgressDialogFragment;
 
 public class MainActivity extends AppCompatActivity {
     
-    /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        // initialize
-        initKiiSDK();
-        
-        // check access token
-        String token = Pref.getStoredAccessToken(getApplicationContext());
-        if (token == null || token.length() == 0) {
-            toTitleFragment();
-            return;
-        } 
-        // check access token
-        ProgressDialogFragment progress = ProgressDialogFragment.newInstance(getString(R.string.login), getString(R.string.login));
-        progress.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
-        
-        // login with token
-        AutoLoginCallback callback = new AutoLoginCallback(this);
-        KiiUser.loginWithToken(callback, token);
+
+        if (savedInstanceState == null) {
+            // initialize
+            initKiiSDK();
+
+            // check access token
+            String token = Pref.getStoredAccessToken(getApplicationContext());
+            if (token == null || token.length() == 0) {
+                toTitleFragment();
+                return;
+            }
+
+            // check access token
+            ProgressDialogFragment progress = ProgressDialogFragment.newInstance(getString(R.string.login), getString(R.string.login));
+            progress.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
+
+            // login with token
+            AutoLoginCallback callback = new AutoLoginCallback(this);
+            KiiUser.loginWithToken(callback, token);
+        } else {
+            // Restore Kii SDK states
+            Kii.onRestoreInstanceState(savedInstanceState);
+        }
     }
 
     /**
@@ -95,5 +98,12 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.main, next);
         
         transaction.commit();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save Kii SDK states
+        Kii.onSaveInstanceState(outState);
     }
 }
