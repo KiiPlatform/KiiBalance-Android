@@ -15,9 +15,10 @@
  */
 package com.kii.sample.balance.title;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,9 @@ import com.kii.sample.balance.R;
 import com.kii.sample.balance.list.BalanceListFragment;
 import com.kii.util.ViewUtil;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * This fragment shows Title view.
  * User can do the following
@@ -37,48 +41,70 @@ import com.kii.util.ViewUtil;
  * </ul>
  */
 public class TitleFragment extends Fragment {
+    private static final int REQUEST_LOGIN = 1;
+    private static final int REQUEST_REGISTER = 2;
+
     public static TitleFragment newInstance() {
         return new TitleFragment();
     }
     
-    /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_title, container, false);
-        
-        ViewUtil.setClickListener(root, new TitleClickListener(this), R.id.button_login, R.id.button_register);
-        
+
+        ButterKnife.bind(this, root);
+
         return root;
     }
-    
-    /**
-     * This method is called when user registration is finished. 
-     * See {@link RegisterCallback#onRegisterCompleted(int, KiiUser, Exception)}
-     */
-    void onRegisterFinished() {
-        FragmentActivity activity = getActivity();
-        if (activity == null) { return; }
-        ViewUtil.showToast(activity, "Register succeeded");
-        // to next fragment
-        onLoginFinished();
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) { return; }
+        switch (requestCode) {
+        case REQUEST_LOGIN: {
+            showListpage();
+            return;
+        }
+        case REQUEST_REGISTER: {
+            ViewUtil.showToast(getActivity(), "Registration succeeded");
+            showListpage();
+            return;
+        }
+        default:
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick(R.id.button_login)
+    void loginClicked() {
+        LoginDialogFragment dialog = LoginDialogFragment.newInstance(this, REQUEST_LOGIN);
+        dialog.show(getFragmentManager(), "");
+    }
+
+    @OnClick(R.id.button_register)
+    void registerClicked() {
+        RegistrationDialogFragment dialog = RegistrationDialogFragment.newInstance(this, REQUEST_REGISTER);
+        dialog.show(getFragmentManager(), "");
     }
     
-    /**
-     * This method is called when login is finished.
-     * See {@link LoginCallback#onLoginCompleted(int, KiiUser, Exception)}
-     */
-    void onLoginFinished() {
-        FragmentActivity activity = getActivity();
+    private void showListpage() {
+        Activity activity = getActivity();
         if (activity == null) { return; }
+
         // store access token
         KiiUser user = KiiUser.getCurrentUser();
         String token = user.getAccessToken();
         Pref.setStoredAccessToken(activity, token);
-        
+
         ViewUtil.toNextFragment(getFragmentManager(), BalanceListFragment.newInstance(), false);
     }
 }
