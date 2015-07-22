@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 import com.kii.cloud.storage.KiiBucket;
 import com.kii.cloud.storage.KiiObject;
 import com.kii.cloud.storage.KiiUser;
+import com.kii.cloud.storage.callback.KiiObjectCallBack;
 import com.kii.cloud.storage.callback.KiiQueryCallBack;
 import com.kii.cloud.storage.query.KiiQuery;
 import com.kii.cloud.storage.query.KiiQueryResult;
@@ -239,11 +241,28 @@ public class BalanceListFragment extends ListFragment {
         progress.show(getFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
 
         // call KiiCloud API
-        AddCallback callback = new AddCallback(this, null);
-        object.save(callback);
+        object.save(new KiiObjectCallBack() {
+            @Override
+            public void onSaveCompleted(int token, KiiObject object, Exception e) {
+                super.onSaveCompleted(token, object, e);
+                ProgressDialogFragment.hide(getFragmentManager());
+
+                FragmentActivity activity = getActivity();
+                if (activity == null) { return; }
+
+                // error check
+                if (e != null) {
+                    ViewUtil.showToast(activity.getApplicationContext(), e.getMessage());
+                    return;
+                }
+
+                ViewUtil.showToast(activity.getApplicationContext(), R.string.add_succeeded);
+                addObjectToList(object);
+            }
+        });
     }
 
-    private void updateObjectInList(String objectId, String name, int type, int amount) {
+    private void updateObjectInList(final String objectId, String name, int type, int amount) {
         // if name is blank, use income/expense as name
         if (name == null || name.length() == 0) {
             if (type == Field.Type.INCOME) {
@@ -265,11 +284,28 @@ public class BalanceListFragment extends ListFragment {
         progress.show(getFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
 
         // call KiiCloud API
-        AddCallback callback = new AddCallback(this, objectId);
-        object.save(callback);
+        object.save(new KiiObjectCallBack() {
+            @Override
+            public void onSaveCompleted(int token, KiiObject object, Exception e) {
+                super.onSaveCompleted(token, object, e);
+                ProgressDialogFragment.hide(getFragmentManager());
+
+                FragmentActivity activity = getActivity();
+                if (activity == null) { return; }
+
+                // error check
+                if (e != null) {
+                    ViewUtil.showToast(activity.getApplicationContext(), e.getMessage());
+                    return;
+                }
+
+                ViewUtil.showToast(activity.getApplicationContext(), R.string.update_succeeded);
+                updateObjectInList(object, objectId);
+            }
+        });
     }
 
-    private void deleteObject(String objectId) {
+    private void deleteObject(final String objectId) {
         // Create an Object instance with its id
         KiiObject object = KiiObject.createByUri(Uri.parse(objectId));
 
@@ -278,8 +314,25 @@ public class BalanceListFragment extends ListFragment {
         progress.show(getFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
 
         // call KiiCloud API
-        DeleteCallback callback = new DeleteCallback(this, objectId);
-        object.delete(callback);
+        object.delete(new KiiObjectCallBack() {
+            @Override
+            public void onDeleteCompleted(int token, Exception e) {
+                super.onDeleteCompleted(token, e);
+                ProgressDialogFragment.hide(getFragmentManager());
+
+                Activity activity = getActivity();
+                if (activity == null) { return; }
+
+                // error check
+                if (e != null) {
+                    ViewUtil.showToast(activity.getApplicationContext(), e.getMessage());
+                    return;
+                }
+
+                ViewUtil.showToast(activity.getApplicationContext(), R.string.delete_succeeded);
+                removeObjectFromList(objectId);
+            }
+        });
     }
 
     // endregion
