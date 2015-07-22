@@ -262,7 +262,7 @@ public class BalanceListFragment extends ListFragment {
 
     private void updateObjectInList(final String objectId, String name, int type, int amount) {
         // if name is blank, use income/expense as name
-        if (name == null || name.length() == 0) {
+        if (TextUtils.isEmpty(name)) {
             if (type == Field.Type.INCOME) {
                 name = getString(R.string.income);
             } else {
