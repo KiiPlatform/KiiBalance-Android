@@ -60,7 +60,7 @@ public class AddCallback extends KiiObjectCallBack {
             fragment.addObjectToList(object);
         } else {
             ViewUtil.showToast(activity.getApplicationContext(), R.string.update_succeeded);
-            fragment.updateObject(object, objectId);
+            fragment.updateObjectInList(object, objectId);
         }
     }
 }

@@ -55,6 +55,6 @@ public class DeleteCallback extends KiiObjectCallBack {
         }
         
         ViewUtil.showToast(activity.getApplicationContext(), R.string.delete_succeeded);
-        fragment.deleteObject(objectId);
+        fragment.removeObjectFromList(objectId);
     }
 }

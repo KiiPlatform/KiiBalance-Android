@@ -26,16 +26,24 @@ import com.kii.sample.balance.kiiobject.Field;
 import com.kii.util.ViewUtil;
 import com.kii.util.dialog.ProgressDialogFragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class ItemEditDialogFragment extends DialogFragment {
     private static final String ARGS_OBJECT_ID = "objectId";
@@ -43,10 +51,31 @@ public class ItemEditDialogFragment extends DialogFragment {
     private static final String ARGS_TYPE = "type";
     private static final String ARGS_AMOUNT = "amount";
 
-    public static ItemEditDialogFragment newInstance(BalanceListFragment target, 
+    static final String ACTION_CREATE = "create";
+    static final String ACTION_UPDATE = "update";
+    static final String ACTION_DELETE = "delete";
+
+    static final String RESULT_OBJECT_ID = "objectId";
+    static final String RESULT_NAME = "name";
+    static final String RESULT_TYPE = "type";
+    static final String RESULT_AMOUNT = "amount";
+
+    @Bind(R.id.edit_name) EditText mNameEdit;
+    @Bind(R.id.radio_type_group) RadioGroup mRadioGroup;
+    @Bind(R.id.type_income) RadioButton mIncomeRadio;
+    @Bind(R.id.type_expense) RadioButton mExpenseRadio;
+    @Bind(R.id.edit_amount) EditText mAmountEdit;
+    @Bind(R.id.edit_sub_amount) EditText mSubAmountEdit;
+
+    private String mObjectId;
+    private String mName;
+    private int mType;
+    private int mAmount;
+
+    public static ItemEditDialogFragment newInstance(Fragment target, int requestCode,
             String objectId, String name, int type, int amount) {
         ItemEditDialogFragment fragment = new ItemEditDialogFragment();
-        fragment.setTargetFragment(target, 0);
+        fragment.setTargetFragment(target, requestCode);
         
         Bundle args = new Bundle();
         args.putString(ARGS_OBJECT_ID, objectId);
@@ -57,103 +86,141 @@ public class ItemEditDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
-     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        mObjectId = args.getString(ARGS_OBJECT_ID);
+        mName = args.getString(ARGS_NAME);
+        mType = args.getInt(ARGS_TYPE);
+        mAmount = args.getInt(ARGS_AMOUNT);
+    }
+
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View root = inflater.inflate(R.layout.dialog_add, null);
+        ButterKnife.bind(this, root);
         
-        // get args and set default
-        Bundle args = getArguments();
-        setDefaultValues(root, args);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(root);
         
-        DialogInterface.OnClickListener listener = new ClickListener(this, root);
-        if (isDialogForCreate(args)) {
-            builder.setPositiveButton(R.string.add, listener);
-            builder.setNegativeButton(R.string.cancel, listener);
+        if (isDialogForCreate()) {
+            builder.setPositiveButton(R.string.add, mClickListener);
+            builder.setNegativeButton(R.string.cancel, mClickListener);
         } else {
-            builder.setPositiveButton(R.string.update, listener);
-            builder.setNeutralButton(R.string.delete, listener);
-            builder.setNegativeButton(R.string.cancel, listener);
+            builder.setPositiveButton(R.string.update, mClickListener);
+            builder.setNeutralButton(R.string.delete, mClickListener);
+            builder.setNegativeButton(R.string.cancel, mClickListener);
         }
         return builder.create();
     }
-    
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            setDefaultValues();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        ButterKnife.unbind(this);
+    }
+
     /**
      * @return true if this dialog is for object creation 
      */
-    private static boolean isDialogForCreate(Bundle args) {
-        String objectId = args.getString(ARGS_OBJECT_ID);
-        return (objectId == null);
+    private boolean isDialogForCreate() {
+        return (mObjectId == null);
     }
 
     /**
      * Set default values
-     * @param root
-     * @param args
      */
-    private void setDefaultValues(View root, Bundle args) {
-        if (isDialogForCreate(args)) { return; }
-        
+    private void setDefaultValues() {
+        if (isDialogForCreate()) { return; }
+
+        if (mNameEdit == null || mIncomeRadio == null || mExpenseRadio == null ||
+                mAmountEdit == null || mSubAmountEdit == null) { return; }
+
         // item name
-        EditText nameEdit = (EditText) root.findViewById(R.id.edit_name);
-        nameEdit.setText(args.getString(ARGS_NAME));
+        mNameEdit.setText(mName);
         
         // item type : income / expense
-        int type = args.getInt(ARGS_TYPE);
-        if (type == Field.Type.INCOME) {
-            RadioButton radio = (RadioButton) root.findViewById(R.id.type_income);
-            radio.setChecked(true);
+        if (mType == Field.Type.INCOME) {
+            mIncomeRadio.setChecked(true);
         } else {
-            RadioButton radio = (RadioButton) root.findViewById(R.id.type_expense);
-            radio.setChecked(true);
+            mExpenseRadio.setChecked(true);
         }
         
         // amount
-        int amount = args.getInt(ARGS_AMOUNT);
-        EditText amountEdit = (EditText) root.findViewById(R.id.edit_amount);
-        amountEdit.setText(String.valueOf(amount / 100));
-        EditText subAmountEdit = (EditText) root.findViewById(R.id.edit_sub_amount);
-        subAmountEdit.setText(String.valueOf(amount % 100));
+        mAmountEdit.setText(String.valueOf(mAmount / 100));
+        mSubAmountEdit.setText(String.valueOf(mAmount % 100));
     }
 
-    private static class ClickListener implements DialogInterface.OnClickListener {
-        
-        private WeakReference<DialogFragment> dialogRef;
-        private View root;
-        ClickListener(DialogFragment dialog, View root) {
-            this.dialogRef = new WeakReference<DialogFragment>(dialog);
-            this.root = root;
-        }
+    private final DialogInterface.OnClickListener mClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            DialogFragment fragment = dialogRef.get();
-            if (fragment == null) { return; }
-            
             switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
-                if (isDialogForCreate(fragment.getArguments())) {
-                    createObject(fragment);
+                if (isDialogForCreate()) {
+                    submit(ACTION_CREATE);
                 } else {
-                    updateObject(fragment);
+                    submit(ACTION_UPDATE);
                 }
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
-                deleteObject(fragment);
+                submit(ACTION_DELETE);
                 break;
             }
         }
+    };
+
+    private void submit(String action) {
+        Fragment target = getTargetFragment();
+        if (target == null) { return; }
+
+        String name = mNameEdit.getText().toString();
+        int type = toType(mRadioGroup.getCheckedRadioButtonId());
+        int amount = toInt(mAmountEdit.getText().toString());
+        int subAmount = toInt(mSubAmountEdit.getText().toString());
+
+        Intent data = new Intent(action);
+        data.putExtra(RESULT_OBJECT_ID, mObjectId);
+        data.putExtra(RESULT_NAME, name);
+        data.putExtra(RESULT_TYPE, type);
+        data.putExtra(RESULT_AMOUNT, amount * 100 + subAmount);
+
+        target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
+    }
+
+    private int toType(int id) {
+        switch (id) {
+        case R.id.type_income: return Field.Type.INCOME;
+        case R.id.type_expense: return Field.Type.EXPENSE;
+        }
+        return Field.Type.EXPENSE;
+    }
+
+    private int toInt(String value) {
+        try {
+            return Integer.valueOf(value);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
 
         /**
          * Create KiiObject and upload it to KiiCloud
          * @param fragment : dialog
          */
+        /*
         private void createObject(DialogFragment fragment) {
             // get input params
             String name = ViewUtil.getValueOfEditText(root, R.id.edit_name);
@@ -193,7 +260,8 @@ public class ItemEditDialogFragment extends DialogFragment {
          * Update KiiObject which is already in KiiCloud
          * @param fragment : dialog
          */
-        private void updateObject(DialogFragment fragment) {
+        /*
+        private void updateObjectInList(DialogFragment fragment) {
             // get input params
             String name = ViewUtil.getValueOfEditText(root, R.id.edit_name);
             int type = toType(ViewUtil.getIdOfRadioChecked(root, R.id.radio_type_group));
@@ -234,7 +302,8 @@ public class ItemEditDialogFragment extends DialogFragment {
          * Delete KiiObject from KiiCloud
          * @param fragment 
          */
-        private void deleteObject(DialogFragment fragment) {
+        /*
+        private void removeObjectFromList(DialogFragment fragment) {
             // get Object id
             Bundle args = fragment.getArguments();
             String objectId = args.getString(ARGS_OBJECT_ID);
@@ -268,4 +337,5 @@ public class ItemEditDialogFragment extends DialogFragment {
             }
         }
     }
+    */
 }
