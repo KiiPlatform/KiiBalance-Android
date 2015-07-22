@@ -18,11 +18,9 @@ package com.kii.sample.balance.title;
 import com.kii.cloud.storage.KiiUser;
 import com.kii.cloud.storage.callback.KiiUserCallBack;
 import com.kii.sample.balance.R;
-import com.kii.util.ViewUtil;
-import com.kii.util.dialog.ProgressDialogFragment;
+import com.kii.util.ProgressDialogFragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -27,7 +27,7 @@ import com.kii.sample.balance.kiiobject.Constants;
 import com.kii.sample.balance.list.BalanceListFragment;
 import com.kii.sample.balance.title.TitleFragment;
 import com.kii.util.ViewUtil;
-import com.kii.util.dialog.ProgressDialogFragment;
+import com.kii.util.ProgressDialogFragment;
 
 public class MainActivity extends AppCompatActivity {
     

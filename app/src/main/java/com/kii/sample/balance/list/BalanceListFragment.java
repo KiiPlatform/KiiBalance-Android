@@ -47,7 +47,7 @@ import com.kii.sample.balance.kiiobject.Constants;
 import com.kii.sample.balance.kiiobject.Field;
 import com.kii.sample.balance.title.TitleFragment;
 import com.kii.util.ViewUtil;
-import com.kii.util.dialog.ProgressDialogFragment;
+import com.kii.util.ProgressDialogFragment;
 
 import java.text.NumberFormat;
 import java.util.List;
