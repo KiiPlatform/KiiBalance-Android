@@ -1,41 +1,37 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <RelativeLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         >
-        <Button 
-            android:id="@+id/button_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="@string/add"
-            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/balance"
-            android:textSize="28dp"
+            android:textSize="28sp"
             />
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/layout_bottom"
+        android:id="@+id/layout_total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" 
+        android:layout_below="@+id/layout_title"
+        android:paddingLeft="@dimen/horizontal_padding"
+        android:paddingRight="@dimen/horizontal_padding"
         >
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="28dp"
-            android:text="@string/remains"  
+            android:textSize="28sp"
+            android:text="@string/remains"
             />
         <TextView
             android:id="@+id/text_remains"
@@ -43,16 +39,25 @@
             android:layout_toRightOf="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="28dp"
-            
+            android:textSize="28sp"
             />
     </RelativeLayout>
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/layout_title"
-        android:layout_above="@+id/layout_bottom"
+        android:layout_below="@+id/layout_total"
+        />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_add_white"
+        app:fabSize="normal"
         />
         
 </RelativeLayout>

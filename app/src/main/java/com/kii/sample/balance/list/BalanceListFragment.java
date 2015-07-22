@@ -52,10 +52,6 @@ public class BalanceListFragment extends ListFragment {
         return new BalanceListFragment();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.ListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -151,7 +147,7 @@ public class BalanceListFragment extends ListFragment {
     
     /**
      * Add KiiObject to list adapter
-     * @param object
+     * @param object Kii Object
      */
     void addObjectToList(KiiObject object) {
         KiiObjectAdapter adapter = (KiiObjectAdapter) getListAdapter();
@@ -163,8 +159,8 @@ public class BalanceListFragment extends ListFragment {
     
     /**
      * Update object with id
-     * @param object
-     * @param objectId
+     * @param object KiiObject
+     * @param objectId Object ID
      */
     void updateObject(KiiObject object, String objectId) {
         KiiObjectAdapter adapter = (KiiObjectAdapter) getListAdapter();
@@ -177,7 +173,7 @@ public class BalanceListFragment extends ListFragment {
     
     /**
      * Delete object with id
-     * @param objectId
+     * @param objectId Object ID
      */
     void deleteObject(String objectId) {
         KiiObjectAdapter adapter = (KiiObjectAdapter) getListAdapter();
