@@ -22,6 +22,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.kii.cloud.storage.KiiUser;
 import com.kii.sample.balance.Pref;
@@ -67,14 +68,13 @@ public class TitleFragment extends Fragment {
             return;
         }
         case REQUEST_REGISTER: {
-            ViewUtil.showToast(getActivity(), "Registration succeeded");
+            showToast(getString(R.string.registration_succeeded));
             showListpage();
             return;
         }
         default:
             super.onActivityResult(requestCode, resultCode, data);
         }
-
     }
 
     @Override
@@ -94,6 +94,13 @@ public class TitleFragment extends Fragment {
     void registerClicked() {
         RegistrationDialogFragment dialog = RegistrationDialogFragment.newInstance(this, REQUEST_REGISTER);
         dialog.show(getFragmentManager(), "");
+    }
+
+    private void showToast(String message) {
+        Activity activity = getActivity();
+        if (activity == null) { return; }
+
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
     }
     
     private void showListpage() {

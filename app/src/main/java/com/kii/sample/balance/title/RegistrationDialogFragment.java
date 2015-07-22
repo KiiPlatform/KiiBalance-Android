@@ -33,7 +33,7 @@ import android.widget.TextView;
 import com.kii.cloud.storage.KiiUser;
 import com.kii.cloud.storage.callback.KiiUserCallBack;
 import com.kii.sample.balance.R;
-import com.kii.util.dialog.ProgressDialogFragment;
+import com.kii.util.ProgressDialogFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

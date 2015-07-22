@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kii.cloud.storage.KiiBucket;
 import com.kii.cloud.storage.KiiObject;
@@ -47,7 +47,7 @@ import com.kii.sample.balance.kiiobject.Constants;
 import com.kii.sample.balance.kiiobject.Field;
 import com.kii.sample.balance.title.TitleFragment;
 import com.kii.util.ViewUtil;
-import com.kii.util.dialog.ProgressDialogFragment;
+import com.kii.util.ProgressDialogFragment;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -67,6 +67,7 @@ public class BalanceListFragment extends ListFragment {
     private static final int REQUEST_EDIT = 1001;
 
     @Bind(R.id.toolbar) Toolbar mToolBar;
+    @Bind(R.id.text_remains) TextView mTotalText;
 
     public static BalanceListFragment newInstance() {
         return new BalanceListFragment();
@@ -195,7 +196,7 @@ public class BalanceListFragment extends ListFragment {
             public void onQueryCompleted(int token, KiiQueryResult<KiiObject> result, Exception e) {
                 super.onQueryCompleted(token, result, e);
                 if (e != null) {
-                    ViewUtil.showToast(getActivity(), e.getMessage());
+                    showToast(e.getMessage());
                     return;
                 }
                 // add all object to adapter
@@ -247,16 +248,13 @@ public class BalanceListFragment extends ListFragment {
                 super.onSaveCompleted(token, object, e);
                 ProgressDialogFragment.hide(getFragmentManager());
 
-                FragmentActivity activity = getActivity();
-                if (activity == null) { return; }
-
                 // error check
                 if (e != null) {
-                    ViewUtil.showToast(activity.getApplicationContext(), e.getMessage());
+                    showToast(e.getMessage());
                     return;
                 }
 
-                ViewUtil.showToast(activity.getApplicationContext(), R.string.add_succeeded);
+                showToast(R.string.add_succeeded);
                 addObjectToList(object);
             }
         });
@@ -264,7 +262,7 @@ public class BalanceListFragment extends ListFragment {
 
     private void updateObjectInList(final String objectId, String name, int type, int amount) {
         // if name is blank, use income/expense as name
-        if (name == null || name.length() == 0) {
+        if (TextUtils.isEmpty(name)) {
             if (type == Field.Type.INCOME) {
                 name = getString(R.string.income);
             } else {
@@ -290,16 +288,13 @@ public class BalanceListFragment extends ListFragment {
                 super.onSaveCompleted(token, object, e);
                 ProgressDialogFragment.hide(getFragmentManager());
 
-                FragmentActivity activity = getActivity();
-                if (activity == null) { return; }
-
                 // error check
                 if (e != null) {
-                    ViewUtil.showToast(activity.getApplicationContext(), e.getMessage());
+                    showToast(e.getMessage());
                     return;
                 }
 
-                ViewUtil.showToast(activity.getApplicationContext(), R.string.update_succeeded);
+                showToast(R.string.update_succeeded);
                 updateObjectInList(object, objectId);
             }
         });
@@ -320,16 +315,13 @@ public class BalanceListFragment extends ListFragment {
                 super.onDeleteCompleted(token, e);
                 ProgressDialogFragment.hide(getFragmentManager());
 
-                Activity activity = getActivity();
-                if (activity == null) { return; }
-
                 // error check
                 if (e != null) {
-                    ViewUtil.showToast(activity.getApplicationContext(), e.getMessage());
+                    showToast(e.getMessage());
                     return;
                 }
 
-                ViewUtil.showToast(activity.getApplicationContext(), R.string.delete_succeeded);
+                showToast(R.string.delete_succeeded);
                 removeObjectFromList(objectId);
             }
         });
@@ -381,17 +373,28 @@ public class BalanceListFragment extends ListFragment {
      * Refresh the value of total label
      */
     void refreshTotalAmount() {
+        if (mTotalText == null) { return; }
+
         KiiObjectAdapter adapter = (KiiObjectAdapter) getListAdapter();
-        View root = getView();
-        if (root == null) { return; }
-        
-        TextView totalText = (TextView) root.findViewById(R.id.text_remains);
         int totalAmount = adapter.getTotalAmount();
-        totalText.setText(AMOUNT_FORMAT.format(adapter.getTotalAmount() / 100.0));
+        mTotalText.setText(AMOUNT_FORMAT.format(adapter.getTotalAmount() / 100.0));
         if (totalAmount >= 0) {
-            totalText.setTextColor(Color.BLACK);
+            mTotalText.setTextColor(Color.BLACK);
         } else {
-            totalText.setTextColor(Color.RED);
+            mTotalText.setTextColor(Color.RED);
         }
+    }
+
+    // endregion
+
+    private void showToast(int msgId) {
+        showToast(getString(msgId));
+    }
+
+    private void showToast(String message) {
+        Activity activity = getActivity();
+        if (activity == null) { return; }
+
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
     }
 }

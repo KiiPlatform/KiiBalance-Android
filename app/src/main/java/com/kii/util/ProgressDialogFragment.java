@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kii.util.dialog;
+package com.kii.util;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 
@@ -45,7 +46,8 @@ public class ProgressDialogFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
-    
+
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // get args
