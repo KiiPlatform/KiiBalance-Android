@@ -15,12 +15,11 @@
  */
 package com.kii.sample.balance.list;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,39 +41,52 @@ import com.kii.sample.balance.title.TitleFragment;
 import com.kii.util.ViewUtil;
 import com.kii.util.dialog.ProgressDialogFragment;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * This fragment shows a list of balance
  */
 public class BalanceListFragment extends ListFragment {
     private static final NumberFormat AMOUNT_FORMAT = NumberFormat.getCurrencyInstance(Locale.US);
-    
+
+    @Bind(R.id.toolbar) Toolbar mToolBar;
+
     public static BalanceListFragment newInstance() {
         return new BalanceListFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // show menu
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_list, container, false);
-        
-        ViewUtil.setClickListener(root, new AddButtonClickListener(this), R.id.button_add);
-        
-        KiiObjectAdapter adapter = new KiiObjectAdapter();
-        setListAdapter(adapter);
+
+        ButterKnife.bind(this, root);
+
+        setListAdapter(new KiiObjectAdapter());
         
         return root;
     }
     
-    /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
-     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // show menu
-        setHasOptionsMenu(true);
-        
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setTitle(R.string.balance);
+        activity.setSupportActionBar(mToolBar);
+
         // get items
         KiiUser user = KiiUser.getCurrentUser();
         KiiBucket bucket = user.bucket(Constants.BUCKET_NAME);
@@ -94,20 +106,13 @@ public class BalanceListFragment extends ListFragment {
         
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onCreateOptionsMenu(android.view.Menu, android.view.MenuInflater)
-     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(Menu.NONE, R.id.menu_logout, Menu.NONE, R.string.menu_logout);
+        menu.clear();
+        inflater.inflate(R.menu.menu_list, menu);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onOptionsItemSelected(android.view.MenuItem)
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -119,10 +124,6 @@ public class BalanceListFragment extends ListFragment {
         }
     }
     
-    /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.ListFragment#onListItemClick(android.widget.ListView, android.view.View, int, long)
-     */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -135,16 +136,23 @@ public class BalanceListFragment extends ListFragment {
         dialog.show(getFragmentManager(), "");
     }
 
-    /**
-     * Logout process : remove access token from SharedPreferences and go to Title Fragment
-     */
     private void logout() {
         // clear token
         Pref.setStoredAccessToken(getActivity(), "");
         // next fragment
         ViewUtil.toNextFragment(getFragmentManager(), TitleFragment.newInstance(), false);
     }
-    
+
+    @OnClick(R.id.button_add)
+    void addClicked() {
+        showAddDialog();
+    }
+
+    private void showAddDialog() {
+        ItemEditDialogFragment dialog = ItemEditDialogFragment.newInstance(this, null, null, 0, 0);
+        dialog.show(getFragmentManager(), "");
+    }
+
     /**
      * Add KiiObject to list adapter
      * @param object Kii Object

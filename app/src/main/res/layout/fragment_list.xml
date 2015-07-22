@@ -3,26 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    
-    <RelativeLayout
-        android:id="@+id/layout_title"
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/balance"
-            android:textSize="28sp"
-            />
-    </RelativeLayout>
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:title="@string/balance"
+        />
     <RelativeLayout
         android:id="@+id/layout_total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_title"
+        android:layout_marginTop="?attr/actionBarSize"
         android:paddingLeft="@dimen/horizontal_padding"
         android:paddingRight="@dimen/horizontal_padding"
         >
