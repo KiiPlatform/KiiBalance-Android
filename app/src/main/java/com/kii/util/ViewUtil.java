@@ -28,57 +28,10 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 public class ViewUtil {
-    /**
-     * call setOnClickListener(listener) to each view
-     * @param root is parent view
-     * @param listener is listener object
-     * @param ids is list of id which you want to set
-     */
-    public static void setClickListener(View root, View.OnClickListener listener, int... ids) {
-        for (int id : ids) {
-            View view = root.findViewById(id);
-            view.setOnClickListener(listener);
-        }
-    }
-    /**
-     * get a value of EditText 
-     * @param root
-     * @param resId
-     * @return value of EditText
-     */
-    public static String getValueOfEditText(View root, int resId) {
-        EditText edit = (EditText) root.findViewById(resId);
-        if (edit == null) { throw new RuntimeException("View not found id=" + resId); }
-        return edit.getText().toString();
-    }
-    
-    /**
-     * get id of checked radio buttion
-     * @param root
-     * @param resId is id of RadioGroup
-     * @return
-     */
-    public static int getIdOfRadioChecked(View root, int resId) {
-        RadioGroup group = (RadioGroup) root.findViewById(resId);
-        if (group == null) { throw new RuntimeException("View not found id=" + resId); }
-        return group.getCheckedRadioButtonId();
-    }
-    
-    /**
-     * get a value of SeekBar 
-     * @param root
-     * @param resId
-     * @return value of SeekBar
-     */
-    public static int getValueOfSeekBar(View root, int resId) {
-        SeekBar bar = (SeekBar) root.findViewById(resId);
-        if (bar == null) { throw new RuntimeException("View not found id=" + resId); }
-        return bar.getProgress();
-    }
-    
+
     /**
      * show toast
-     * @param context
+     * @param context Context
      * @param resId is R.string.xxxx to show as toast
      */
     public static void showToast(Context context, int resId) {
@@ -87,8 +40,8 @@ public class ViewUtil {
     
     /**
      * show toast
-     * @param context
-     * @param message 
+     * @param context Context
+     * @param message message
      */
     public static void showToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();

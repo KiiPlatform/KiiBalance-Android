@@ -16,16 +16,17 @@
 package com.kii.sample.balance;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
 import com.kii.cloud.storage.Kii;
 import com.kii.cloud.storage.Kii.Site;
 import com.kii.cloud.storage.KiiUser;
+import com.kii.cloud.storage.callback.KiiUserCallBack;
 import com.kii.sample.balance.kiiobject.Constants;
 import com.kii.sample.balance.list.BalanceListFragment;
 import com.kii.sample.balance.title.TitleFragment;
+import com.kii.util.ViewUtil;
 import com.kii.util.dialog.ProgressDialogFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
             // check access token
             String token = Pref.getStoredAccessToken(getApplicationContext());
-            if (token == null || token.length() == 0) {
-                toTitleFragment();
+            if (TextUtils.isEmpty(token)) {
+                showTitlePage();
                 return;
             }
 
@@ -51,8 +52,22 @@ public class MainActivity extends AppCompatActivity {
             progress.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
 
             // login with token
-            AutoLoginCallback callback = new AutoLoginCallback(this);
-            KiiUser.loginWithToken(callback, token);
+            KiiUser.loginWithToken(new KiiUserCallBack() {
+                @Override
+                public void onLoginCompleted(int token, KiiUser user, Exception e) {
+                    super.onLoginCompleted(token, user, e);
+                    ProgressDialogFragment.hide(getSupportFragmentManager());
+
+                    // error check
+                    if (e != null) {
+                        // go to normal login
+                        showTitlePage();
+                        return;
+                    }
+                    // login is succeeded then go to List Fragment
+                    showListPage();
+                }
+            }, token);
         } else {
             // Restore Kii SDK states
             Kii.onRestoreInstanceState(savedInstanceState);
@@ -75,27 +90,15 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Show title fragment
      */
-    public void toTitleFragment() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        
-        TitleFragment next = TitleFragment.newInstance();
-        transaction.replace(R.id.main, next);
-        
-        transaction.commit();
+    public void showTitlePage() {
+        ViewUtil.toNextFragment(getSupportFragmentManager(), TitleFragment.newInstance(), false);
     }
 
     /**
      * Show list fragment
      */
-    public void toListFragment() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        
-        BalanceListFragment next = BalanceListFragment.newInstance();
-        transaction.replace(R.id.main, next);
-        
-        transaction.commit();
+    public void showListPage() {
+        ViewUtil.toNextFragment(getSupportFragmentManager(), BalanceListFragment.newInstance(), false);
     }
 
     @Override
