@@ -32,15 +32,6 @@ public class ViewUtil {
     /**
      * show toast
      * @param context Context
-     * @param resId is R.string.xxxx to show as toast
-     */
-    public static void showToast(Context context, int resId) {
-        showToast(context, context.getString(resId));
-    }
-    
-    /**
-     * show toast
-     * @param context Context
      * @param message message
      */
     public static void showToast(Context context, String message) {
