@@ -30,21 +30,13 @@ import android.widget.Toast;
 public class ViewUtil {
 
     /**
-     * show toast
-     * @param context Context
-     * @param message message
-     */
-    public static void showToast(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-    }
-    
-    /**
      * replace with next fragment
      * @param manager is fragment manager
      * @param next is fragment you want to replace with
      * @param addBackstack true : add current fragment to backstack
      */
     public static void toNextFragment(FragmentManager manager, Fragment next, boolean addBackstack) {
+        if (manager == null) { return; }
         FragmentTransaction transaction = manager.beginTransaction();
         if (addBackstack) {
             transaction.addToBackStack("");

@@ -35,10 +35,9 @@
     <string name="update">Update</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="registration_succeeded">Registration succeeded</string>
     <string name="add_succeeded">Add succeeded</string>
     <string name="update_succeeded">Update succeeded</string>
     <string name="delete_succeeded">Delete succeeded</string>
-    
-    
 
 </resources>
