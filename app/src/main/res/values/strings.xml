@@ -1,0 +1,43 @@
+<resources>
+
+    <string name="app_name">KiiBalance</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Title -->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    
+    <!-- Registration -->
+    <string name="register_kii_cloud">Register KiiCloud</string>
+    <!-- Login -->
+    <string name="login_kii_cloud">Login KiiCloud</string>
+    
+    <string name="error_invalid_username">Error : invalid format : username</string>
+    <string name="error_invalid_password">Error : invalid format : password</string>
+    <!-- List -->
+    <string name="remains">Balance</string>
+    <string name="add">Add</string>
+    <string name="balance">Your Balance</string>
+    <string name="loading">Loading</string>
+    <string name="menu_logout">Logout</string>
+    
+    <!-- add dialog -->
+    <string name="name">Name</string>
+    <string name="amount">Amount</string>
+    <string name="dot">.</string>
+    <string name="zero">0</string>
+    <string name="type">Type</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="registration_succeeded">Registration succeeded</string>
+    <string name="add_succeeded">Add succeeded</string>
+    <string name="update_succeeded">Update succeeded</string>
+    <string name="delete_succeeded">Delete succeeded</string>
+
+</resources>
