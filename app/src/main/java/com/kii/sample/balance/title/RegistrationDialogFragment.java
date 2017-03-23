@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +34,10 @@ import com.kii.cloud.storage.callback.KiiUserCallBack;
 import com.kii.sample.balance.R;
 import com.kii.util.ProgressDialogFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * This dialog shows user registration form
@@ -49,17 +49,19 @@ public class RegistrationDialogFragment extends DialogFragment {
     private static final String MESSAGE_INVALID_PASSWORD = "Invalid Password";
     private static final String MESSAGE_REGISTRATION_FAILED = "Registration is failed.";
 
-    @Bind(R.id.text_message)
+    @BindView(R.id.text_message)
     TextView mMessageText;
 
-    @Bind(R.id.edit_username)
+    @BindView(R.id.edit_username)
     EditText mUsernameEdit;
 
-    @Bind(R.id.edit_password)
+    @BindView(R.id.edit_password)
     EditText mPasswordEdit;
 
-    @Bind(R.id.button_submit)
+    @BindView(R.id.button_submit)
     Button mSubmitButton;
+
+    private Unbinder mButterKnifeUnbinder;
 
     public static RegistrationDialogFragment newInstance(Fragment target, int requestCode) {
         RegistrationDialogFragment fragment = new RegistrationDialogFragment();
@@ -75,7 +77,7 @@ public class RegistrationDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.dialog_login_register, container, false);
 
-        ButterKnife.bind(this, root);
+        mButterKnifeUnbinder = ButterKnife.bind(this, root);
 
         // set text
         mSubmitButton.setText(R.string.register);
@@ -87,7 +89,7 @@ public class RegistrationDialogFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        ButterKnife.unbind(this);
+        mButterKnifeUnbinder.unbind();
     }
 
     @NonNull
@@ -114,19 +116,16 @@ public class RegistrationDialogFragment extends DialogFragment {
             return;
         }
         // show progress
-        ProgressDialogFragment progress = ProgressDialogFragment.newInstance(getActivity(), R.string.register, R.string.register);
-        progress.show(getFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
+        ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.register);
 
         // call user registration API
         KiiUser user = KiiUser.builderWithName(username).build();
         user.register(new KiiUserCallBack() {
             @Override
             public void onRegisterCompleted(int token, KiiUser user, Exception e) {
-                super.onRegisterCompleted(token, user, e);
-                ProgressDialogFragment.hide(getFragmentManager());
+                ProgressDialogFragment.close(getFragmentManager());
 
                 if (e != null) {
-                    Log.e(TAG, "Register completed error", e);
                     showErrorMessage(MESSAGE_REGISTRATION_FAILED);
                     return;
                 }

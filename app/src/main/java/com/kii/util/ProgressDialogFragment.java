@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Kii
+ * Copyright 2016 Kii
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +24,27 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 
 public class ProgressDialogFragment extends DialogFragment {
-    public static final String FRAGMENT_TAG = "progress";
-    private static final String ARGS_TITLE = "title";
-    private static final String ARGS_MESSAGE = "message";
+    private static final String FRAGMENT_TAG = "Progress";
+    private static final String ARGS_TITLE = "Title";
+    private static final String ARGS_MESSAGE = "Message";
 
-    public static ProgressDialogFragment newInstance(Context context, int titleId, int messageId) {
-        return newInstance(context.getString(titleId), context.getString(messageId));
+    public static ProgressDialogFragment show(Context context, FragmentManager manager, int titleId) {
+        ProgressDialogFragment fragment = newInstance(context.getString(titleId), context.getString(titleId));
+        fragment.show(manager, ProgressDialogFragment.FRAGMENT_TAG);
+        return fragment;
     }
-    
-    public static void hide(FragmentManager manager) {
+
+    public static void close(FragmentManager manager) {
+        if (manager == null) {
+            return;
+        }
         DialogFragment dialog = (DialogFragment) manager.findFragmentByTag(ProgressDialogFragment.FRAGMENT_TAG);
-        if (dialog == null) { return; }
+        if (dialog == null) {
+            return;
+        }
         dialog.dismiss();
     }
+
     public static ProgressDialogFragment newInstance(String title, String message) {
         ProgressDialogFragment fragment = new ProgressDialogFragment();
 

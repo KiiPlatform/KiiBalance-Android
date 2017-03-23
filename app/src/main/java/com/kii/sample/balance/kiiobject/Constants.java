@@ -15,9 +15,12 @@
  */
 package com.kii.sample.balance.kiiobject;
 
+import com.kii.cloud.storage.Kii;
+
 public class Constants {
     public static final String APP_ID = "ee573743";
     public static final String APP_KEY = "5eb7b8bc1b4e4c98e659431c69cef8d4";
-    
+    public static final Kii.Site APP_SITE = Kii.Site.US;
+
     public static final String BUCKET_NAME = "balance_book";
 }

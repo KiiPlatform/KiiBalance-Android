@@ -34,29 +34,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * This dialog shows user registration form
  */
 public class LoginDialogFragment extends DialogFragment {
-    private static final String MESSAGE_INVALID_USERNAME = "Invalid Username";
-    private static final String MESSAGE_INVALID_PASSWORD = "Invalid Password";
-    private static final String MESSAGE_LOGIN_FAILED = "Login is failed.";
 
-    @Bind(R.id.text_message)
+    @BindView(R.id.text_message)
     TextView mMessageText;
 
-    @Bind(R.id.edit_username)
+    @BindView(R.id.edit_username)
     EditText mUsernameEdit;
 
-    @Bind(R.id.edit_password)
+    @BindView(R.id.edit_password)
     EditText mPasswordEdit;
 
-    @Bind(R.id.button_submit)
+    @BindView(R.id.button_submit)
     Button mSubmitButton;
+
+    private Unbinder mButterKnifeUnbinder;
 
     public static LoginDialogFragment newInstance(Fragment target, int requestCode) {
         LoginDialogFragment fragment = new LoginDialogFragment();
@@ -71,7 +71,7 @@ public class LoginDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.dialog_login_register, container, false);
 
-        ButterKnife.bind(this, root);
+        mButterKnifeUnbinder = ButterKnife.bind(this, root);
 
         // set text
         mSubmitButton.setText(R.string.login);
@@ -83,7 +83,7 @@ public class LoginDialogFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        ButterKnife.unbind(this);
+        mButterKnifeUnbinder.unbind();
     }
 
     @NonNull
@@ -102,27 +102,24 @@ public class LoginDialogFragment extends DialogFragment {
 
         // check
         if (!KiiUser.isValidUserName(username)) {
-            showErrorMessage(MESSAGE_INVALID_USERNAME);
+            showErrorMessage(R.string.message_invalid_username);
             return;
         }
         if (!KiiUser.isValidPassword(password)) {
-            showErrorMessage(MESSAGE_INVALID_PASSWORD);
+            showErrorMessage(R.string.message_invalid_password);
             return;
         }
 
         // show progress
-        ProgressDialogFragment progress = ProgressDialogFragment.newInstance(getActivity(), R.string.login, R.string.login);
-        progress.show(getFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
+        ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.login);
 
         // call user login API
         KiiUser.logIn(new KiiUserCallBack() {
             @Override
             public void onLoginCompleted(int token, KiiUser user, Exception e) {
-                super.onLoginCompleted(token, user, e);
-
-                ProgressDialogFragment.hide(getFragmentManager());
+                ProgressDialogFragment.close(getFragmentManager());
                 if (e != null) {
-                    showErrorMessage(MESSAGE_LOGIN_FAILED);
+                    showErrorMessage(R.string.message_login_failed);
                     return;
                 }
 
@@ -140,11 +137,12 @@ public class LoginDialogFragment extends DialogFragment {
     
     /**
      * Show error message
-     * @param message is error message
+     * @param messageID is id of the error message
      */
-    void showErrorMessage(String message) {
+    void showErrorMessage(int messageID) {
         if (mMessageText == null) { return; }
 
+        String message = getString(messageID);
         mMessageText.setVisibility(View.VISIBLE);
         mMessageText.setText(message);
     }

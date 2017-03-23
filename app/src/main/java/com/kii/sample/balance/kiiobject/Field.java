@@ -16,14 +16,14 @@
 package com.kii.sample.balance.kiiobject;
 
 public interface Field {
-    public static final String NAME = "name";
-    public static final String TYPE = "type";
-    public static final String AMOUNT = "amount";
-    
-    public static final String _CREATED = "_created";
-    
-    public interface Type {
-        public static final int INCOME = 1;
-        public static final int EXPENSE = 2;
+    String NAME = "name";
+    String TYPE = "type";
+    String AMOUNT = "amount";
+
+    String _CREATED = "_created";
+
+    interface Type {
+        int INCOME = 1;
+        int EXPENSE = 2;
     }
 }

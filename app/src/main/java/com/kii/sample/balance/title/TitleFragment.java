@@ -22,16 +22,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.kii.cloud.storage.KiiUser;
-import com.kii.sample.balance.Pref;
 import com.kii.sample.balance.R;
 import com.kii.sample.balance.list.BalanceListFragment;
 import com.kii.util.ViewUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * This fragment shows Title view.
@@ -45,6 +43,8 @@ public class TitleFragment extends Fragment {
     private static final int REQUEST_LOGIN = 1;
     private static final int REQUEST_REGISTER = 2;
 
+    private Unbinder mButterKnifeUnbinder;
+
     public static TitleFragment newInstance() {
         return new TitleFragment();
     }
@@ -54,7 +54,7 @@ public class TitleFragment extends Fragment {
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_title, container, false);
 
-        ButterKnife.bind(this, root);
+        mButterKnifeUnbinder = ButterKnife.bind(this, root);
 
         return root;
     }
@@ -64,12 +64,12 @@ public class TitleFragment extends Fragment {
         if (resultCode != Activity.RESULT_OK) { return; }
         switch (requestCode) {
         case REQUEST_LOGIN: {
-            showListpage();
+            showListPage();
             return;
         }
         case REQUEST_REGISTER: {
-            showToast(getString(R.string.registration_succeeded));
-            showListpage();
+            ViewUtil.showToast(getActivity(), getString(R.string.registration_succeeded));
+            showListPage();
             return;
         }
         default:
@@ -81,7 +81,7 @@ public class TitleFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        ButterKnife.unbind(this);
+        mButterKnifeUnbinder.unbind();
     }
 
     @OnClick(R.id.button_login)
@@ -96,21 +96,9 @@ public class TitleFragment extends Fragment {
         dialog.show(getFragmentManager(), "");
     }
 
-    private void showToast(String message) {
+    private void showListPage() {
         Activity activity = getActivity();
         if (activity == null) { return; }
-
-        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
-    }
-    
-    private void showListpage() {
-        Activity activity = getActivity();
-        if (activity == null) { return; }
-
-        // store access token
-        KiiUser user = KiiUser.getCurrentUser();
-        String token = user.getAccessToken();
-        Pref.setStoredAccessToken(activity, token);
 
         ViewUtil.toNextFragment(getFragmentManager(), BalanceListFragment.newInstance(), false);
     }

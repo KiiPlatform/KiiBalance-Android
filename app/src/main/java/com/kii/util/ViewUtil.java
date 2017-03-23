@@ -17,6 +17,7 @@ package com.kii.util;
 
 import com.kii.sample.balance.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,15 +34,33 @@ public class ViewUtil {
      * replace with next fragment
      * @param manager is fragment manager
      * @param next is fragment you want to replace with
-     * @param addBackstack true : add current fragment to backstack
+     * @param addBackStack true : add current fragment to back stack
      */
-    public static void toNextFragment(FragmentManager manager, Fragment next, boolean addBackstack) {
+    public static void toNextFragment(FragmentManager manager, Fragment next, boolean addBackStack) {
         if (manager == null) { return; }
         FragmentTransaction transaction = manager.beginTransaction();
-        if (addBackstack) {
+        if (addBackStack) {
             transaction.addToBackStack("");
         }
         transaction.replace(R.id.main, next);
         transaction.commit();
     }
+
+    /*
+     * Display the message with the toast
+     */
+    public static void showToast(Activity activity, int id) {
+        if (activity == null) { return; }
+        showToast(activity, activity.getString(id));
+    }
+
+    /*
+     * Display the message with the toast
+     */
+    public static void showToast(Activity activity, String message) {
+        if (activity == null) { return; }
+
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+    }
+
 }

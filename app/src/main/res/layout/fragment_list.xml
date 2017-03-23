@@ -21,16 +21,15 @@
         android:paddingRight="@dimen/horizontal_padding"
         >
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/text_remains_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="28sp"
-            android:text="@string/remains"
             />
         <TextView
-            android:id="@+id/text_remains"
+            android:id="@+id/text_remains_value"
             android:gravity="right"
-            android:layout_toRightOf="@+id/textView1"
+            android:layout_toRightOf="@+id/text_remains_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="28sp"
@@ -51,6 +50,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_add_white"
+        android:visibility="invisible"
         app:fabSize="normal"
         />
         

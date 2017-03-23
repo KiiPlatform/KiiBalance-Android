@@ -44,21 +44,12 @@ public class KiiObjectAdapter extends BaseAdapter {
     
     private int totalAmount;
     private List<KiiObject> items = new ArrayList<KiiObject>();
-    
-    /**
-     * Add an item to the head of list
-     * @param item
-     */
-    public void addFirst(KiiObject item) {
-        items.add(0, item);
-        addTotalAmount(item);
-    }
-    
+
     /**
      * Add an item to the last of list
      * @param item
      */
-    public void add(KiiObject item) {
+    void add(KiiObject item) {
         items.add(item);
         addTotalAmount(item);
     }
@@ -68,7 +59,7 @@ public class KiiObjectAdapter extends BaseAdapter {
      * @param object
      * @param objectId
      */
-    public void updateObject(KiiObject object, String objectId) {
+    void updateObject(KiiObject object, String objectId) {
         // delete and get position
         int position = delete(objectId);
         if (position == -1) { return; } // not found
@@ -79,8 +70,8 @@ public class KiiObjectAdapter extends BaseAdapter {
      * Delete object with ObjectID
      * @param objectId
      * @return position / -1 if item is not found
-     */
-    public int delete(String objectId) {
+     */    int delete(String objectId) {
+
         // get position
         int position = -1;
         for (int i = 0 ; i < items.size() ; ++i) {
@@ -107,18 +98,18 @@ public class KiiObjectAdapter extends BaseAdapter {
             totalAmount -= amount;
         }
     }
-    
+
     /**
      * Remove all items from list
      */
-    public void clear() {
+    void clear() {
         items.clear();
     }
-    
+
     /**
      * Compute total amount
      */
-    public void computeTotalAmount() {
+    void computeTotalAmount() {
         totalAmount = 0;
         for (KiiObject item : items) {
             addTotalAmount(item);
@@ -127,7 +118,7 @@ public class KiiObjectAdapter extends BaseAdapter {
     /**
      * @return total amount
      */
-    public int getTotalAmount() {
+    int getTotalAmount() {
         return totalAmount;
     }
     
@@ -201,10 +192,10 @@ public class KiiObjectAdapter extends BaseAdapter {
     }
     
     private static class ViewHolder {
-        public TextView nameText;
-        public TextView amountText;
-        public TextView dateText;
-        public ViewHolder(TextView nameText, TextView amountText, TextView dateText) {
+        TextView nameText;
+        TextView amountText;
+        TextView dateText;
+        ViewHolder(TextView nameText, TextView amountText, TextView dateText) {
             this.nameText = nameText;
             this.amountText = amountText;
             this.dateText = dateText;
