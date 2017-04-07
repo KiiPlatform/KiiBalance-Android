@@ -79,7 +79,9 @@ public class KiiObjectAdapter extends BaseAdapter {
         // get position
         int position = -1;
         for (int i = 0 ; i < items.size() ; ++i) {
-            if (items.get(i).getString("_id").toString().equals(objectId)) {
+            String uri = items.get(i).toUri().toString();
+            String itemID = uri.substring(uri.lastIndexOf('/') + 1);
+            if (itemID.equals(objectId)) {
                 position = i;
                 break;
             }

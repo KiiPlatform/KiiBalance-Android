@@ -154,7 +154,9 @@ public class BalanceListFragment extends ListFragment {
         KiiObject object = (KiiObject) adapter.getItem(position);
         
         // Show the edit dialog.
-        ItemEditDialogFragment dialog = ItemEditDialogFragment.newInstance(this, REQUEST_EDIT, object.getString("_id"),
+        String uri = object.toUri().toString();
+        String objectID = uri.substring(uri.lastIndexOf('/') + 1);
+        ItemEditDialogFragment dialog = ItemEditDialogFragment.newInstance(this, REQUEST_EDIT, objectID,
                 object.getString(Field.NAME), object.getInt(Field.TYPE), object.getInt(Field.AMOUNT));
         dialog.show(getFragmentManager(), "");
     }
