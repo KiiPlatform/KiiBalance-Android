@@ -231,6 +231,7 @@ public class BalanceListFragment extends ListFragment {
                     for (KiiObject object : objectList) {
                         adapter.add(object);
                     }
+                    adapter.computeTotalAmount();
                     adapter.notifyDataSetChanged();
                     refreshTotalAmount();
                     mAddButton.setVisibility(View.VISIBLE);

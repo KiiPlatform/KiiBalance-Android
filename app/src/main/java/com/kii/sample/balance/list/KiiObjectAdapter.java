@@ -73,12 +73,13 @@ public class KiiObjectAdapter extends BaseAdapter {
      * Delete a KiiObject with its ID.
      * @param objectId
      * @return position / -1 if the target KiiObject is not found
-     */    int delete(String objectId) {
+     */
+    int delete(String objectId) {
 
         // get position
         int position = -1;
         for (int i = 0 ; i < items.size() ; ++i) {
-            if (items.get(i).toUri().toString().equals(objectId)) {
+            if (items.get(i).getString("_id").toString().equals(objectId)) {
                 position = i;
                 break;
             }
