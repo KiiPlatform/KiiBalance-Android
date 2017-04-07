@@ -35,11 +35,11 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * This fragment shows Title view.
- * User can do the following
+ * This fragment shows the title screen.
+ * The user can do the following:
  * <ul>
- * <li>Register with username and password</li>
- * <li>Login with username and password</li>
+ * <li>Sign up with a username and password.</li>
+ * <li>Log in with a username and password.</li>
  * </ul>
  */
 public class TitleFragment extends Fragment {

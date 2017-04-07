@@ -63,7 +63,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * This fragment shows a list of balance
+ * This fragment shows a list of income and expense entries.
  */
 public class BalanceListFragment extends ListFragment {
     private static final NumberFormat AMOUNT_FORMAT = NumberFormat.getCurrencyInstance(Locale.US);
@@ -85,7 +85,7 @@ public class BalanceListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // show menu
+        // Show the menu.
         setHasOptionsMenu(true);
     }
 
@@ -105,7 +105,7 @@ public class BalanceListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // init ToolBar
+        // Initialize the toolbar.
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setTitle(R.string.balance);
         activity.setSupportActionBar(mToolBar);
@@ -142,7 +142,7 @@ public class BalanceListFragment extends ListFragment {
     }
 
     private void logout() {
-        // next fragment
+        // Show the title screen.
         KiiUser.logOut();
         ViewUtil.toNextFragment(getFragmentManager(), TitleFragment.newInstance(), false);
     }
@@ -153,7 +153,7 @@ public class BalanceListFragment extends ListFragment {
         KiiObjectAdapter adapter = (KiiObjectAdapter) getListAdapter();
         KiiObject object = (KiiObject) adapter.getItem(position);
         
-        // show dialog
+        // Show the edit dialog.
         ItemEditDialogFragment dialog = ItemEditDialogFragment.newInstance(this, REQUEST_EDIT, object.getString("_id"),
                 object.getString(Field.NAME), object.getInt(Field.TYPE), object.getInt(Field.AMOUNT));
         dialog.show(getFragmentManager(), "");
@@ -161,7 +161,7 @@ public class BalanceListFragment extends ListFragment {
 
     @OnClick(R.id.button_add)
     void addClicked() {
-        // show Dialog
+        // Show the add dialog.
         ItemEditDialogFragment dialog = ItemEditDialogFragment.newInstance(this, REQUEST_ADD, null, "", Field.Type.INCOME, 0);
         dialog.show(getFragmentManager(), "");
     }
@@ -197,20 +197,20 @@ public class BalanceListFragment extends ListFragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    // region Kii Cloud operation
+    // region The methods below manipulate data on Kii Cloud.
 
     private void getItems() {
         KiiUser user = KiiUser.getCurrentUser();
         KiiBucket bucket = user.bucket(Constants.BUCKET_NAME);
 
-        // create query instance.
+        // Create a query instance.
         KiiQuery query = new KiiQuery();
-        // sort KiiObject by _created
+        // Sort KiiObjects by the _created field.
         query.sortByAsc(Field._CREATED);
 
         final List<KiiObject> objectList = new ArrayList<KiiObject>();
 
-        // call Kii API
+        // Call the KiiCloud API to query KiiObjects.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.loading);
         bucket.query(new KiiQueryCallBack<KiiObject>() {
             @Override
@@ -223,7 +223,7 @@ public class BalanceListFragment extends ListFragment {
                 }
                 objectList.addAll(result.getResult());
 
-                // check
+                // Check if more KiiObjects exit.
                 if (!result.hasNext()) {
                     ProgressDialogFragment.close(getFragmentManager());
                     KiiObjectAdapter adapter = (KiiObjectAdapter) getListAdapter();
@@ -236,14 +236,14 @@ public class BalanceListFragment extends ListFragment {
                     mAddButton.setVisibility(View.VISIBLE);
                     return;
                 }
-                // try to get rest
+                // Get the remaining KiiObjects.
                 result.getNextQueryResult(this);
             }
         }, query);
     }
 
     private void createObject(String name, int type, int amount) {
-        // if name is blank, use income/expense as name
+        // If the name is blank, name the entry Income or Expense.
         if (TextUtils.isEmpty(name)) {
             if (type == Field.Type.INCOME) {
                 name = getString(R.string.income);
@@ -252,7 +252,7 @@ public class BalanceListFragment extends ListFragment {
             }
         }
 
-        // Create an Object instance
+        // Create a KiiObject instance.
         KiiUser user = KiiUser.getCurrentUser();
         KiiBucket bucket = user.bucket(Constants.BUCKET_NAME);
         KiiObject object = bucket.object();
@@ -261,17 +261,17 @@ public class BalanceListFragment extends ListFragment {
         object.set(Field.TYPE, type);
         object.set(Field.AMOUNT, amount);
 
-        // show progress
+        // Show the progress.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.add);
 
-        // call KiiCloud API
+        // Call the KiiCloud API for adding the KiiObject on Kii Cloud.
         object.save(new KiiObjectCallBack() {
             @Override
             public void onSaveCompleted(int token, KiiObject object, Exception e) {
                 super.onSaveCompleted(token, object, e);
                 ProgressDialogFragment.close(getFragmentManager());
 
-                // error check
+                // Check an error.
                 if (e != null) {
                     ViewUtil.showToast(getActivity(), e.getMessage());
                     return;
@@ -284,7 +284,7 @@ public class BalanceListFragment extends ListFragment {
     }
 
     private void updateObjectInList(final String objectId, String name, int type, int amount) {
-        // if name is blank, use income/expense as name
+        // If the name is blank, name the entry Income or Expense.
         if (TextUtils.isEmpty(name)) {
             if (type == Field.Type.INCOME) {
                 name = getString(R.string.income);
@@ -293,7 +293,7 @@ public class BalanceListFragment extends ListFragment {
             }
         }
 
-        // Create an Object instance with its id
+        // Create a KiiObject instance with its ID.
         KiiUser user = KiiUser.getCurrentUser();
         KiiBucket bucket = user.bucket(Constants.BUCKET_NAME);
         KiiObject object = bucket.object(objectId);
@@ -302,17 +302,17 @@ public class BalanceListFragment extends ListFragment {
         object.set(Field.TYPE, type);
         object.set(Field.AMOUNT, amount);
 
-        // show progress
+        // Show the progress.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.update);
 
-        // call KiiCloud API
+        // Call the KiiCloud API for updating the KiiObject on Kii Cloud.
         object.save(new KiiObjectCallBack() {
             @Override
             public void onSaveCompleted(int token, KiiObject object, Exception e) {
                 super.onSaveCompleted(token, object, e);
                 ProgressDialogFragment.close(getFragmentManager());
 
-                // error check
+                // Check an error.
                 if (e != null) {
                     ViewUtil.showToast(getActivity(), e.getMessage());
                     return;
@@ -325,22 +325,22 @@ public class BalanceListFragment extends ListFragment {
     }
 
     private void deleteObject(final String objectId) {
-        // Create an Object instance with its id
+        // Create a KiiObject instance with its ID.
         KiiUser user = KiiUser.getCurrentUser();
         KiiBucket bucket = user.bucket(Constants.BUCKET_NAME);
         KiiObject object = bucket.object(objectId);
 
-        // show progress
+        // Show the progress.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.delete);
 
-        // call KiiCloud API
+        // Call the KiiCloud API for deleting the KiiObject on Kii Cloud.
         object.delete(new KiiObjectCallBack() {
             @Override
             public void onDeleteCompleted(int token, Exception e) {
                 super.onDeleteCompleted(token, e);
                 ProgressDialogFragment.close(getFragmentManager());
 
-                // error check
+                // Check an error.
                 if (e != null) {
                     ViewUtil.showToast(getActivity(), e.getMessage());
                     return;
@@ -353,11 +353,11 @@ public class BalanceListFragment extends ListFragment {
     }
 
     // endregion
-    // region UI refresh APIs
+    // region The methods below refresh the user interface.
 
     /**
-     * Add KiiObject to list
-     * @param object Kii Object
+     * Add a KiiObject to the list.
+     * @param object KiiObject
      */
     private void addObjectToList(KiiObject object) {
         KiiObjectAdapter adapter = (KiiObjectAdapter) getListAdapter();
@@ -368,7 +368,7 @@ public class BalanceListFragment extends ListFragment {
     }
     
     /**
-     * Update object in List
+     * Update a KiiObject in the list.
      * @param object KiiObject
      * @param objectId Object ID
      */
@@ -382,7 +382,7 @@ public class BalanceListFragment extends ListFragment {
     }
     
     /**
-     * Remove object from List
+     * Remove a KiiObject from the list.
      * @param objectId Object ID
      */
     private void removeObjectFromList(String objectId) {
@@ -395,7 +395,7 @@ public class BalanceListFragment extends ListFragment {
     }
     
     /**
-     * Refresh the value of total label
+     * Refresh the balance.
      */
     private void refreshTotalAmount() {
         if (mTotalTextLabel == null || mTotalTextValue == null) { return; }

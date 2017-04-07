@@ -43,7 +43,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * This dialog shows user registration form
+ * This dialog shows the user registration form.
  */
 public class RegistrationDialogFragment extends DialogFragment {
     private static final String TAG = "RegistrationDialog";
@@ -82,7 +82,7 @@ public class RegistrationDialogFragment extends DialogFragment {
 
         mButterKnifeUnbinder = ButterKnife.bind(this, root);
 
-        // set text
+        // Set the button text.
         mSubmitButton.setText(R.string.register);
 
         return root;
@@ -105,11 +105,11 @@ public class RegistrationDialogFragment extends DialogFragment {
 
     @OnClick(R.id.button_submit)
     void submitClicked() {
-        // gets username / password
+        // Get a username and password.
         String username = mUsernameEdit.getText().toString();
         String password = mPasswordEdit.getText().toString();
 
-        // check
+        // Check if the username and password are valid.
         if (!KiiUser.isValidUserName(username)) {
             showErrorMessage(MESSAGE_INVALID_USERNAME);
             return;
@@ -118,10 +118,11 @@ public class RegistrationDialogFragment extends DialogFragment {
             showErrorMessage(MESSAGE_INVALID_PASSWORD);
             return;
         }
-        // show progress
+
+        // Show the progress.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.register);
 
-        // call user registration API
+        // Register the user.
         KiiUser user = KiiUser.builderWithName(username).build();
         user.register(new KiiUserCallBack() {
             @Override
@@ -133,7 +134,7 @@ public class RegistrationDialogFragment extends DialogFragment {
                     return;
                 }
 
-                // notify caller fragment that registration is done.
+                // Notify the caller fragment that the user has been registered.
                 Fragment target = getTargetFragment();
                 if (target == null) {
                     dismiss();
@@ -146,8 +147,8 @@ public class RegistrationDialogFragment extends DialogFragment {
     }
     
     /**
-     * Show error message
-     * @param message is error message
+     * Show an error message.
+     * @param message is the error message.
      */
     private void showErrorMessage(String message) {
         if (mMessageText == null) { return; }

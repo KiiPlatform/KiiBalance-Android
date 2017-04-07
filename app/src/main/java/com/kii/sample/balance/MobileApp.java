@@ -29,9 +29,9 @@ public class MobileApp extends Application {
         super.onCreate();
         Kii.initialize(
                 getApplicationContext(),
-                Constants.APP_ID,  // Put your App ID
-                Constants.APP_KEY, // Put your App Key
-                Constants.APP_SITE // Put your site as you've specified upon creating the app on the dev portal
+                Constants.APP_ID,  // Put AppID of your application.
+                Constants.APP_KEY, // Put AppKey of your application.
+                Constants.APP_SITE // Put the server location of your application.
         );
     }
 }

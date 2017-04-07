@@ -38,7 +38,7 @@ import com.kii.sample.balance.R;
 import com.kii.sample.balance.kiiobject.Field;
 
 /**
- * List adapter for showing KiiObject
+ * This class is the list adapter for KiiObjects.
  */
 public class KiiObjectAdapter extends BaseAdapter {
 
@@ -49,7 +49,7 @@ public class KiiObjectAdapter extends BaseAdapter {
     private List<KiiObject> items = new ArrayList<KiiObject>();
 
     /**
-     * Add an item to the last of list
+     * Add a KiiObject to the end of the list.
      * @param item
      */
     void add(KiiObject item) {
@@ -58,21 +58,21 @@ public class KiiObjectAdapter extends BaseAdapter {
     }
     
     /**
-     * Update object with ObjectID
+     * Update a KiiObject with its ID.
      * @param object
      * @param objectId
      */
     void updateObject(KiiObject object, String objectId) {
-        // delete and get position
+        // Delete the existing KiiObject and get its position.
         int position = delete(objectId);
-        if (position == -1) { return; } // not found
+        if (position == -1) { return; } // The target KiiObject is not found.
         items.add(position, object);
     }
     
     /**
-     * Delete object with ObjectID
+     * Delete a KiiObject with its ID.
      * @param objectId
-     * @return position / -1 if item is not found
+     * @return position / -1 if the target KiiObject is not found
      */    int delete(String objectId) {
 
         // get position
@@ -89,7 +89,7 @@ public class KiiObjectAdapter extends BaseAdapter {
     }
     
     /**
-     * Add the value of this item to total amount
+     * Add the amount set in this KiiObject to the balance.
      * @param item
      */
     private void addTotalAmount(KiiObject item) {
@@ -103,14 +103,14 @@ public class KiiObjectAdapter extends BaseAdapter {
     }
 
     /**
-     * Remove all items from list
+     * Remove all KiiObjects from the list.
      */
     void clear() {
         items.clear();
     }
 
     /**
-     * Compute total amount
+     * Calculate the balance.
      */
     void computeTotalAmount() {
         totalAmount = 0;
@@ -119,7 +119,7 @@ public class KiiObjectAdapter extends BaseAdapter {
         }
     }
     /**
-     * @return total amount
+     * @return the balance
      */
     int getTotalAmount() {
         return totalAmount;
@@ -164,7 +164,7 @@ public class KiiObjectAdapter extends BaseAdapter {
             
             View layout = inflater.inflate(R.layout.list_item, null);
 
-            // set textViews to ViewHolder
+            // Set textViews to ViewHolder.
             TextView nameText = (TextView) layout.findViewById(R.id.text_name);
             TextView amountText = (TextView) layout.findViewById(R.id.text_amount);
             TextView dateText = (TextView) layout.findViewById(R.id.text_date);

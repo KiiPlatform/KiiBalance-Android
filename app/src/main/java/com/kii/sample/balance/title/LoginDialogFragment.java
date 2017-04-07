@@ -43,7 +43,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * This dialog shows user registration form
+ * This dialog shows the login form.
  */
 public class LoginDialogFragment extends DialogFragment {
 
@@ -76,7 +76,7 @@ public class LoginDialogFragment extends DialogFragment {
 
         mButterKnifeUnbinder = ButterKnife.bind(this, root);
 
-        // set text
+        // Set the button text.
         mSubmitButton.setText(R.string.login);
 
         return root;
@@ -99,11 +99,11 @@ public class LoginDialogFragment extends DialogFragment {
 
     @OnClick(R.id.button_submit)
     void submitClicked() {
-        // gets username / password
+        // Get a username and password.
         String username = mUsernameEdit.getText().toString();
         String password = mPasswordEdit.getText().toString();
 
-        // check
+        // Check if the username and password are valid.
         if (!KiiUser.isValidUserName(username)) {
             showErrorMessage(R.string.message_invalid_username);
             return;
@@ -113,10 +113,10 @@ public class LoginDialogFragment extends DialogFragment {
             return;
         }
 
-        // show progress
+        // Show the progress.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.login);
 
-        // call user login API
+        // Log in the user.
         KiiUser.logIn(new KiiUserCallBack() {
             @Override
             public void onLoginCompleted(int token, KiiUser user, Exception e) {
@@ -126,7 +126,7 @@ public class LoginDialogFragment extends DialogFragment {
                     return;
                 }
 
-                // notify caller fragment that registration is done.
+                // Notify the caller fragment that the user has been logged in.
                 Fragment target = getTargetFragment();
                 if (target == null) {
                     dismiss();
@@ -139,8 +139,8 @@ public class LoginDialogFragment extends DialogFragment {
     }
     
     /**
-     * Show error message
-     * @param messageID is id of the error message
+     * Show an error message.
+     * @param messageID is the ID of the error message.
      */
     void showErrorMessage(int messageID) {
         if (mMessageText == null) { return; }

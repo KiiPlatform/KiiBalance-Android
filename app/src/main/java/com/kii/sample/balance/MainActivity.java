@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(KiiUser user, Exception exception) {
                 if (exception != null) {
-                    // Show title fragment
+                    // Show the title screen.
                     ViewUtil.toNextFragment(getSupportFragmentManager(), TitleFragment.newInstance(), false);
                 } else {
-                    // Show list fragment
+                    // Show the data listing screen.
                     ViewUtil.toNextFragment(getSupportFragmentManager(), BalanceListFragment.newInstance(), false);
                 }
             }

@@ -61,7 +61,7 @@ public class ProgressDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // get args
+        // Get arguments.
         Bundle args = getArguments();
         String title = args.getString(ARGS_TITLE);
         String msg = args.getString(ARGS_MESSAGE);

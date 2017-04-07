@@ -131,14 +131,14 @@ public class ItemEditDialogFragment extends DialogFragment {
     }
 
     /**
-     * @return true if this dialog is for object creation 
+     * @return true if this dialog is called for adding an entry
      */
     private boolean isDialogForCreate() {
         return (mObjectId == null);
     }
 
     /**
-     * Set default values
+     * Set the default values.
      */
     private void setDefaultValues() {
         if (isDialogForCreate()) { return; }
@@ -146,17 +146,17 @@ public class ItemEditDialogFragment extends DialogFragment {
         if (mNameEdit == null || mIncomeRadio == null || mExpenseRadio == null ||
                 mAmountEdit == null || mSubAmountEdit == null) { return; }
 
-        // item name
+        // Set the name.
         mNameEdit.setText(mName);
         
-        // item type : income / expense
+        // Set the type: income or expense.
         if (mType == Field.Type.INCOME) {
             mIncomeRadio.setChecked(true);
         } else {
             mExpenseRadio.setChecked(true);
         }
         
-        // amount
+        // Set the amount.
         mAmountEdit.setText(String.valueOf(mAmount / 100));
         mSubAmountEdit.setText(String.valueOf(mAmount % 100));
     }

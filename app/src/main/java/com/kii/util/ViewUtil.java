@@ -34,10 +34,10 @@ import android.widget.Toast;
 public class ViewUtil {
 
     /**
-     * replace with next fragment
-     * @param manager is fragment manager
-     * @param next is fragment you want to replace with
-     * @param addBackStack true : add current fragment to back stack
+     * Replace the current fragment with the next fragment.
+     * @param manager is the fragment manager.
+     * @param next is the fragment to show next.
+     * @param addBackStack true if the current fragment should be added to the back stack.
      */
     public static void toNextFragment(FragmentManager manager, Fragment next, boolean addBackStack) {
         if (manager == null) { return; }
@@ -50,7 +50,7 @@ public class ViewUtil {
     }
 
     /*
-     * Display the message with the toast
+     * Display a toast message.
      */
     public static void showToast(Activity activity, int id) {
         if (activity == null) { return; }
@@ -58,7 +58,7 @@ public class ViewUtil {
     }
 
     /*
-     * Display the message with the toast
+     * Display a toast message.
      */
     public static void showToast(Activity activity, String message) {
         if (activity == null) { return; }
