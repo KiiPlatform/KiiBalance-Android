@@ -1,18 +1,21 @@
-/*
- * Copyright 2013 Kii
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- *     
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+//
+//
+// Copyright 2017 Kii Corporation
+// http://kii.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+//
 package com.kii.sample.balance.list;
 
 import java.text.NumberFormat;
@@ -35,7 +38,7 @@ import com.kii.sample.balance.R;
 import com.kii.sample.balance.kiiobject.Field;
 
 /**
- * List adapter for showing KiiObject
+ * This class is the list adapter for KiiObjects.
  */
 public class KiiObjectAdapter extends BaseAdapter {
 
@@ -44,47 +47,41 @@ public class KiiObjectAdapter extends BaseAdapter {
     
     private int totalAmount;
     private List<KiiObject> items = new ArrayList<KiiObject>();
-    
+
     /**
-     * Add an item to the head of list
+     * Add a KiiObject to the end of the list.
      * @param item
      */
-    public void addFirst(KiiObject item) {
-        items.add(0, item);
-        addTotalAmount(item);
-    }
-    
-    /**
-     * Add an item to the last of list
-     * @param item
-     */
-    public void add(KiiObject item) {
+    void add(KiiObject item) {
         items.add(item);
         addTotalAmount(item);
     }
     
     /**
-     * Update object with ObjectID
+     * Update a KiiObject with its ID.
      * @param object
      * @param objectId
      */
-    public void updateObject(KiiObject object, String objectId) {
-        // delete and get position
+    void updateObject(KiiObject object, String objectId) {
+        // Delete the existing KiiObject and get its position.
         int position = delete(objectId);
-        if (position == -1) { return; } // not found
+        if (position == -1) { return; } // The target KiiObject is not found.
         items.add(position, object);
     }
     
     /**
-     * Delete object with ObjectID
+     * Delete a KiiObject with its ID.
      * @param objectId
-     * @return position / -1 if item is not found
+     * @return position / -1 if the target KiiObject is not found
      */
-    public int delete(String objectId) {
+    int delete(String objectId) {
+
         // get position
         int position = -1;
         for (int i = 0 ; i < items.size() ; ++i) {
-            if (items.get(i).toUri().toString().equals(objectId)) {
+            String uri = items.get(i).toUri().toString();
+            String itemID = uri.substring(uri.lastIndexOf('/') + 1);
+            if (itemID.equals(objectId)) {
                 position = i;
                 break;
             }
@@ -95,7 +92,7 @@ public class KiiObjectAdapter extends BaseAdapter {
     }
     
     /**
-     * Add the value of this item to total amount
+     * Add the amount set in this KiiObject to the balance.
      * @param item
      */
     private void addTotalAmount(KiiObject item) {
@@ -107,27 +104,27 @@ public class KiiObjectAdapter extends BaseAdapter {
             totalAmount -= amount;
         }
     }
-    
+
     /**
-     * Remove all items from list
+     * Remove all KiiObjects from the list.
      */
-    public void clear() {
+    void clear() {
         items.clear();
     }
-    
+
     /**
-     * Compute total amount
+     * Calculate the balance.
      */
-    public void computeTotalAmount() {
+    void computeTotalAmount() {
         totalAmount = 0;
         for (KiiObject item : items) {
             addTotalAmount(item);
         }
     }
     /**
-     * @return total amount
+     * @return the balance
      */
-    public int getTotalAmount() {
+    int getTotalAmount() {
         return totalAmount;
     }
     
@@ -170,7 +167,7 @@ public class KiiObjectAdapter extends BaseAdapter {
             
             View layout = inflater.inflate(R.layout.list_item, null);
 
-            // set textViews to ViewHolder
+            // Set textViews to ViewHolder.
             TextView nameText = (TextView) layout.findViewById(R.id.text_name);
             TextView amountText = (TextView) layout.findViewById(R.id.text_amount);
             TextView dateText = (TextView) layout.findViewById(R.id.text_date);
@@ -201,10 +198,10 @@ public class KiiObjectAdapter extends BaseAdapter {
     }
     
     private static class ViewHolder {
-        public TextView nameText;
-        public TextView amountText;
-        public TextView dateText;
-        public ViewHolder(TextView nameText, TextView amountText, TextView dateText) {
+        TextView nameText;
+        TextView amountText;
+        TextView dateText;
+        ViewHolder(TextView nameText, TextView amountText, TextView dateText) {
             this.nameText = nameText;
             this.amountText = amountText;
             this.dateText = dateText;

@@ -16,17 +16,22 @@
 // limitations under the License.
 //
 //
-package com.kii.sample.balance.kiiobject;
+package com.kii.sample.balance;
 
-public interface Field {
-    String NAME = "name";
-    String TYPE = "type";
-    String AMOUNT = "amount";
+import android.app.Application;
 
-    String _CREATED = "_created";
+import com.kii.cloud.storage.Kii;
+import com.kii.sample.balance.kiiobject.Constants;
 
-    interface Type {
-        int INCOME = 1;
-        int EXPENSE = 2;
+public class MobileApp extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Kii.initialize(
+                getApplicationContext(),
+                Constants.APP_ID,  // Put AppID of your application.
+                Constants.APP_KEY, // Put AppKey of your application.
+                Constants.APP_SITE // Put the server location of your application.
+        );
     }
 }

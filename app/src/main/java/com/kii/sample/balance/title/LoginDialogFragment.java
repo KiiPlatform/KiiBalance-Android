@@ -1,18 +1,21 @@
-/*
- * Copyright 2013 Kii
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- *     
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+//
+//
+// Copyright 2017 Kii Corporation
+// http://kii.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+//
 package com.kii.sample.balance.title;
 
 import com.kii.cloud.storage.KiiUser;
@@ -34,29 +37,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
- * This dialog shows user registration form
+ * This dialog shows the login form.
  */
 public class LoginDialogFragment extends DialogFragment {
-    private static final String MESSAGE_INVALID_USERNAME = "Invalid Username";
-    private static final String MESSAGE_INVALID_PASSWORD = "Invalid Password";
-    private static final String MESSAGE_LOGIN_FAILED = "Login is failed.";
 
-    @Bind(R.id.text_message)
+    @BindView(R.id.text_message)
     TextView mMessageText;
 
-    @Bind(R.id.edit_username)
+    @BindView(R.id.edit_username)
     EditText mUsernameEdit;
 
-    @Bind(R.id.edit_password)
+    @BindView(R.id.edit_password)
     EditText mPasswordEdit;
 
-    @Bind(R.id.button_submit)
+    @BindView(R.id.button_submit)
     Button mSubmitButton;
+
+    private Unbinder mButterKnifeUnbinder;
 
     public static LoginDialogFragment newInstance(Fragment target, int requestCode) {
         LoginDialogFragment fragment = new LoginDialogFragment();
@@ -71,9 +74,9 @@ public class LoginDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.dialog_login_register, container, false);
 
-        ButterKnife.bind(this, root);
+        mButterKnifeUnbinder = ButterKnife.bind(this, root);
 
-        // set text
+        // Set the button text.
         mSubmitButton.setText(R.string.login);
 
         return root;
@@ -83,7 +86,7 @@ public class LoginDialogFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        ButterKnife.unbind(this);
+        mButterKnifeUnbinder.unbind();
     }
 
     @NonNull
@@ -96,37 +99,34 @@ public class LoginDialogFragment extends DialogFragment {
 
     @OnClick(R.id.button_submit)
     void submitClicked() {
-        // gets username / password
+        // Get a username and password.
         String username = mUsernameEdit.getText().toString();
         String password = mPasswordEdit.getText().toString();
 
-        // check
+        // Check if the username and password are valid.
         if (!KiiUser.isValidUserName(username)) {
-            showErrorMessage(MESSAGE_INVALID_USERNAME);
+            showErrorMessage(R.string.message_invalid_username);
             return;
         }
         if (!KiiUser.isValidPassword(password)) {
-            showErrorMessage(MESSAGE_INVALID_PASSWORD);
+            showErrorMessage(R.string.message_invalid_password);
             return;
         }
 
-        // show progress
-        ProgressDialogFragment progress = ProgressDialogFragment.newInstance(getActivity(), R.string.login, R.string.login);
-        progress.show(getFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
+        // Show the progress.
+        ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.login);
 
-        // call user login API
+        // Log in the user.
         KiiUser.logIn(new KiiUserCallBack() {
             @Override
             public void onLoginCompleted(int token, KiiUser user, Exception e) {
-                super.onLoginCompleted(token, user, e);
-
-                ProgressDialogFragment.hide(getFragmentManager());
+                ProgressDialogFragment.close(getFragmentManager());
                 if (e != null) {
-                    showErrorMessage(MESSAGE_LOGIN_FAILED);
+                    showErrorMessage(R.string.message_login_failed);
                     return;
                 }
 
-                // notify caller fragment that registration is done.
+                // Notify the caller fragment that the user has been logged in.
                 Fragment target = getTargetFragment();
                 if (target == null) {
                     dismiss();
@@ -139,12 +139,13 @@ public class LoginDialogFragment extends DialogFragment {
     }
     
     /**
-     * Show error message
-     * @param message is error message
+     * Show an error message.
+     * @param messageID is the ID of the error message.
      */
-    void showErrorMessage(String message) {
+    void showErrorMessage(int messageID) {
         if (mMessageText == null) { return; }
 
+        String message = getString(messageID);
         mMessageText.setVisibility(View.VISIBLE);
         mMessageText.setText(message);
     }
