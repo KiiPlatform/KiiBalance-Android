@@ -1,4 +1,4 @@
-KiiBalance v1.0
+KiiBalance v1.1
 ======================
 
 This is a sample application for KiiCloud. 
@@ -13,7 +13,7 @@ This app uses the following features:
 + User Management
  + Register by username / password.
  + Login by username / password.
- + Logib by access token.
+ + Login by access token.
 
 + Cloud Storage
  + Create object in user scope.
@@ -23,8 +23,4 @@ This app uses the following features:
   + equal clause
   + sort by Desc
 
-See http://documentation.kii.com/en/kii-balance-for-android for more details.
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/KiiPlatform/kiibalance-android/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
+See http://docs.kii.com/en/samples/kii-balance/ for more details.
