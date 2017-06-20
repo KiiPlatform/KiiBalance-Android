@@ -212,7 +212,7 @@ public class BalanceListFragment extends ListFragment {
 
         final List<KiiObject> objectList = new ArrayList<KiiObject>();
 
-        // Call the KiiCloud API to query KiiObjects.
+        // Call the Kii Cloud API to query KiiObjects.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.loading);
         bucket.query(new KiiQueryCallBack<KiiObject>() {
             @Override
@@ -267,7 +267,7 @@ public class BalanceListFragment extends ListFragment {
         // Show the progress.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.add);
 
-        // Call the KiiCloud API for adding the KiiObject on Kii Cloud.
+        // Call the Kii Cloud API for adding the KiiObject on Kii Cloud.
         object.save(new KiiObjectCallBack() {
             @Override
             public void onSaveCompleted(int token, KiiObject object, Exception e) {
@@ -308,7 +308,7 @@ public class BalanceListFragment extends ListFragment {
         // Show the progress.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.update);
 
-        // Call the KiiCloud API for updating the KiiObject on Kii Cloud.
+        // Call the Kii Cloud API for updating the KiiObject on Kii Cloud.
         object.save(new KiiObjectCallBack() {
             @Override
             public void onSaveCompleted(int token, KiiObject object, Exception e) {
@@ -336,7 +336,7 @@ public class BalanceListFragment extends ListFragment {
         // Show the progress.
         ProgressDialogFragment.show(getActivity(), getFragmentManager(), R.string.delete);
 
-        // Call the KiiCloud API for deleting the KiiObject on Kii Cloud.
+        // Call the Kii Cloud API for deleting the KiiObject on Kii Cloud.
         object.delete(new KiiObjectCallBack() {
             @Override
             public void onDeleteCompleted(int token, Exception e) {

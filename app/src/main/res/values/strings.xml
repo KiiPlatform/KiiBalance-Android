@@ -9,9 +9,9 @@
     <string name="login">Login</string>
     
     <!-- Registration -->
-    <string name="register_kii_cloud">Register KiiCloud</string>
+    <string name="register_kii_cloud">Register Kii Cloud</string>
     <!-- Login -->
-    <string name="login_kii_cloud">Login KiiCloud</string>
+    <string name="login_kii_cloud">Login Kii Cloud</string>
     
     <string name="message_invalid_username">Invalid Username</string>
     <string name="message_invalid_password">Invalid Password</string>

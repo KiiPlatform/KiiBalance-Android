@@ -1,7 +1,7 @@
 KiiBalance v1.1
 ======================
 
-This is a sample application for KiiCloud. 
+This is a sample application for Kii Cloud. 
 You can record your balance in this app. 
 
 This app runs on Android 2.2(Froyo) or latest.
