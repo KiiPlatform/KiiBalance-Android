@@ -21,14 +21,11 @@ package com.kii.util;
 import com.kii.sample.balance.R;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.SeekBar;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.widget.Toast;
 
 public class ViewUtil {
